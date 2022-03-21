@@ -1,10 +1,10 @@
 <script setup>
-const state = ref({
+const state = reactive({
   title: "My Todo App",
   tasks: [
     {
       name: "ストレッチする",
-      isComplete: true,
+      isComplete: false,
     },
     {
       name: "本を読む",
@@ -24,6 +24,7 @@ const addTask = () => {
 
 const deleteTask = (index) => {
   state.tasks.forEach((task, loopIndex) => {
+    console.log(index, task, loopIndex)
     if (index === loopIndex) {
       state.tasks.splice(index, 1)
     }
@@ -36,7 +37,7 @@ const completeTask = (index) => {
       task.isComplete = !task.isComplete;
     }
   })
-  state.saveToLocalStorage()
+  // state.saveToLocalStorage()
 }
 
 
@@ -61,7 +62,7 @@ const getLocalStorageData = () => {
       <section class="tasks">
         <ul>
           <li
-            v-for="task in state.tasks"
+            v-for="(task, index) in state.tasks"
             :key="task"
             :id="index"
             :class="{ complete: task.isComplete }"
