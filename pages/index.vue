@@ -1,17 +1,12 @@
 <script setup>
 const state = reactive({
-  title: "My Todo App",
-  tasks: [
-    {
-      name: "ストレッチする",
-      isComplete: false,
-    },
-    {
-      name: "本を読む",
-      isComplete: false,
-    },
-  ],
+  title: "Nuxt3 Todo App",
+  tasks: [],
   newTask: "",
+})
+
+onMounted(() => {
+  getLocalStorageData()
 })
 
 const addTask = () => {
@@ -19,16 +14,17 @@ const addTask = () => {
     name: state.newTask,
     isComplete: false,
   })
+  localStorage.setItem('todo', JSON.stringify(state.tasks))
   state.newTask = ""
 }
 
 const deleteTask = (index) => {
   state.tasks.forEach((task, loopIndex) => {
-    console.log(index, task, loopIndex)
     if (index === loopIndex) {
       state.tasks.splice(index, 1)
     }
   })
+  localStorage.setItem('todo', JSON.stringify(state.tasks))
 }
 
 const completeTask = (index) => {
@@ -37,15 +33,13 @@ const completeTask = (index) => {
       task.isComplete = !task.isComplete;
     }
   })
-  // state.saveToLocalStorage()
+  localStorage.setItem('todo', JSON.stringify(state.tasks))
 }
-
 
 const getLocalStorageData = () => {
   const data = localStorage.getItem('todo');
-
   if (data) {
-    this.tasks = JSON.parse(data);
+    state.tasks = JSON.parse(data);
   }
 }
 </script>
@@ -55,10 +49,9 @@ const getLocalStorageData = () => {
     <div class="wrapper">
       <h2 class="title">{{ state.title }}</h2>
       <section class="add-task">
-        <input type="text" v-model="state.newTask" />
+        <input type="text" v-model="state.newTask" autofocus />
         <button @click="addTask">追加する</button>
       </section>
-      <!-- <AtomsTheButton /> -->
       <section class="tasks">
         <ul>
           <li
